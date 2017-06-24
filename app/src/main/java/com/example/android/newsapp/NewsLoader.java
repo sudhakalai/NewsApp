@@ -13,6 +13,7 @@ public class NewsLoader extends AsyncTaskLoader<ArrayList<News>> {
 
     String mUrl;
 
+    //Constructor declaration
     public NewsLoader(Context context, String url) {
         super(context);
         mUrl = url;
@@ -23,6 +24,7 @@ public class NewsLoader extends AsyncTaskLoader<ArrayList<News>> {
         forceLoad();
     }
 
+    //runs in the background
     @Override
     public ArrayList<News> loadInBackground() {
         if (mUrl == null) {

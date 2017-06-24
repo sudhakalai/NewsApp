@@ -21,10 +21,12 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements LoaderCallbacks<ArrayList<News>>{
 
+    //Declaring Global variables
+
     private static String SAMPLE_JSON="";
     private static String BASE_URL = "http://content.guardianapis.com/search?";
 
-    NewsAdapter adapter;
+    NewsAdapter adapter; //Adapter declaration
     private static final int BOOK_LOADER_ID = 1;
     private TextView mEmptyStateTextView; //empty textView initialization
 
@@ -35,12 +37,9 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<A
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final LoaderManager loaderManager = getLoaderManager();
+        final LoaderManager loaderManager = getLoaderManager(); // initializing loadManager
 
-
-
-
-        final ListView newsListView = (ListView) findViewById(R.id.list);
+        final ListView newsListView = (ListView) findViewById(R.id.list); //initializing listView
 
         mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
         newsListView.setEmptyView(mEmptyStateTextView);
@@ -53,10 +52,11 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<A
 
         adapter = new NewsAdapter(this,0, new ArrayList<News>());
 
-        newsListView.setAdapter(adapter);
+        newsListView.setAdapter(adapter); //Attaching adapter to listView
 
         Button searchButton = (Button) findViewById(R.id.searchButton);
 
+        //Setting on click listener for the search button
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<A
             }
         });
 
+        //Setting onItemClickListener for the listView so that each list item  opens a url when clicked
         newsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

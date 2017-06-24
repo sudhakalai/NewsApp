@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    android:padding="@dimen/activity_padding"
     xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
@@ -10,8 +10,8 @@
         android:layout_height="wrap_content"
         android:maxLines="2"
         tools:text="This is the title of the news"
-        android:paddingBottom="8dp"
-        android:textSize="18sp"
+        android:paddingBottom="@dimen/padding_bottom"
+        android:textSize="@dimen/title"
         android:textStyle="bold"
         android:id="@+id/news_title"/>
 
@@ -24,14 +24,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="Politics"
-            android:textSize="16sp"
-            android:paddingRight="16dp"
+            android:textSize="@dimen/section"
+            android:paddingRight="@dimen/activity_padding"
             android:id="@+id/news_section"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="16-02-2016"
-            android:textSize="14sp"
+            android:textSize="@dimen/date"
             android:id="@+id/news_date"/>
 
     </LinearLayout>

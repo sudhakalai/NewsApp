@@ -9,21 +9,22 @@
         android:layout_height="wrap_content"
         android:id="@+id/searchView">
         <EditText
-            android:layout_width="0dp"
+            android:layout_width="@dimen/zero"
             android:layout_height="wrap_content"
             android:layout_weight="3"
             android:id="@+id/searchText"
-            android:hint="Enter search text"
+            android:hint="@string/searchHint"
             android:inputType="textMultiLine"
-            android:paddingLeft="16dp"/>
+            android:paddingLeft="@dimen/activity_padding"/>
         <Button
-            android:layout_width="0dp"
+            android:layout_width="@dimen/zero"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:id="@+id/searchButton"
-            android:text="Search"
+            android:text="@string/search"
             android:backgroundTint="@color/colorPrimary"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white"
+            android:paddingRight="@dimen/activity_padding"/>
     </LinearLayout>
 
     <ListView
