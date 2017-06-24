@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -19,7 +21,9 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements LoaderCallbacks<ArrayList<News>>{
 
-    private static String SAMPLE_JSON="http://content.guardianapis.com/search?q=debates&api-key=test";
+    private static String SAMPLE_JSON="";
+    private static String BASE_URL = "http://content.guardianapis.com/search?";
+
     NewsAdapter adapter;
     private static final int BOOK_LOADER_ID = 1;
     private TextView mEmptyStateTextView; //empty textView initialization
@@ -41,13 +45,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<A
         mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
         newsListView.setEmptyView(mEmptyStateTextView);
 
-        if(isInternetConnectionAvailable()){
-            loaderManager.initLoader(BOOK_LOADER_ID, null, MainActivity.this);
-        }else{
-            adapter.clear();
-            mEmptyStateTextView.setText("No internet connection");
 
-        }
 
         final View loadingIndicator = findViewById(R.id.loading_indicator);
         loadingIndicator.setVisibility(View.GONE);
@@ -56,6 +54,39 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<A
         adapter = new NewsAdapter(this,0, new ArrayList<News>());
 
         newsListView.setAdapter(adapter);
+
+        Button searchButton = (Button) findViewById(R.id.searchButton);
+
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                adapter.clear();
+                loadingIndicator.setVisibility(View.VISIBLE);
+                mEmptyStateTextView.setText("");
+
+                EditText searchText = (EditText) findViewById(R.id.searchText);
+                Uri baseUri = Uri.parse(BASE_URL);
+                Uri.Builder uriBuilder = baseUri.buildUpon();
+
+                uriBuilder.appendQueryParameter("q", searchText.getText().toString());
+                uriBuilder.appendQueryParameter("api-key","test");
+
+                SAMPLE_JSON = uriBuilder.toString();
+
+                if(isInternetConnectionAvailable()){
+                    loaderManager.restartLoader(BOOK_LOADER_ID, null, MainActivity.this);
+                }else{
+                    adapter.clear();
+                    loadingIndicator.setVisibility(View.GONE);
+                    mEmptyStateTextView.setText("No internet connection");
+                }
+                SAMPLE_JSON = "";
+                BASE_URL = "http://content.guardianapis.com/search?";
+                searchText.setText("");
+
+            }
+        });
 
         newsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -85,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<A
         View loadingIndicator = findViewById(R.id.loading_indicator);
         loadingIndicator.setVisibility(View.GONE);
 
-        // Set empty state text to display "No books found."
+        // Set empty state text to display "No results found."
         mEmptyStateTextView.setText("no results found");
 
         adapter.clear();
