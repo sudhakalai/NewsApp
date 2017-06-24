@@ -2,10 +2,16 @@ package com.example.android.newsapp;
 
 import android.app.LoaderManager;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Context;
+import android.content.Intent;
 import android.content.Loader;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -13,7 +19,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements LoaderCallbacks<ArrayList<News>>{
 
-    private static String SAMPLE_JSON = "http://content.guardianapis.com/search?q=debate&tag=politics/politics&from-date=2014-01-01&api-key=test";
+    private static String SAMPLE_JSON="http://content.guardianapis.com/search?q=debates&api-key=test";
     NewsAdapter adapter;
     private static final int BOOK_LOADER_ID = 1;
     private TextView mEmptyStateTextView; //empty textView initialization
@@ -26,12 +32,22 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<A
         setContentView(R.layout.activity_main);
 
         final LoaderManager loaderManager = getLoaderManager();
-        loaderManager.initLoader(BOOK_LOADER_ID, null, MainActivity.this);;
 
-        ListView newsListView = (ListView) findViewById(R.id.list);
+
+
+
+        final ListView newsListView = (ListView) findViewById(R.id.list);
 
         mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
         newsListView.setEmptyView(mEmptyStateTextView);
+
+        if(isInternetConnectionAvailable()){
+            loaderManager.initLoader(BOOK_LOADER_ID, null, MainActivity.this);
+        }else{
+            adapter.clear();
+            mEmptyStateTextView.setText("No internet connection");
+
+        }
 
         final View loadingIndicator = findViewById(R.id.loading_indicator);
         loadingIndicator.setVisibility(View.GONE);
@@ -40,6 +56,19 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<A
         adapter = new NewsAdapter(this,0, new ArrayList<News>());
 
         newsListView.setAdapter(adapter);
+
+        newsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                News news = adapter.getItem(position);
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(news.getUrlLink()));
+                startActivity(i);
+            }
+        });
+
+
     }
 
 
@@ -63,8 +92,6 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<A
 
         if (newsS != null && !newsS.isEmpty()) {
             adapter.addAll(newsS);
-        }else{
-            mEmptyStateTextView.setText("null here");
         }
     }
 
@@ -73,4 +100,12 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<A
 
         adapter.clear();
     }
+
+    private boolean isInternetConnectionAvailable(){
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+    }
+
+
 }

@@ -126,17 +126,14 @@ public class QueryUtils {
                 String newsTitle = newsObject.getString("webTitle");
                 String newsSection = newsObject.getString("sectionName");
                 String newsDate = newsObject.getString("webPublicationDate");
+                String newsLink = newsObject.getString("webUrl");
 
-                News news = new News(newsTitle, newsSection, newsDate);
+                News news = new News(newsTitle, newsSection, newsDate, newsLink);
                 newsS.add(news);
             }
 
         } catch (JSONException e) {
             Log.e(TAG, "extractNews: JSON Exception occured", e);
-        }
-
-        if(newsS == null){
-            Log.v(LOG_TAG,"Parsing returns null");
         }
 
         return newsS;
@@ -146,6 +143,12 @@ public class QueryUtils {
 
     public static ArrayList<News> fetchNews (String requestUrl){
         URL url = createUrl(requestUrl);
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         String jsonResponse = null;
 
